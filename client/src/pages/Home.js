@@ -26,17 +26,20 @@ function Home() {
 
 
     function setFilter(values){
-
+        if(values==null){
+        return;
+        }
         var selectedFrom = moment(values[0] , 'MMM DD yyyy HH:mm')
         var selectedTo = moment(values[1] , 'MMM DD yyyy HH:mm')
 
         var temp=[]
 
         for(var car of cars){
-
+            var x=1;
               if(car.bookedTimeSlots.length == 0){
                   temp.push(car)
               }
+             
               else{
 
                    for(var booking of car.bookedTimeSlots) {
@@ -47,13 +50,13 @@ function Home() {
                        moment(booking.to).isBetween(selectedFrom , selectedTo)
                        )
                        {
-
-                       }
-                       else{
-                           temp.push(car)
+                        x=0;
+                        break;
                        }
 
                    }
+                   if(x)
+                   temp.push(car)
 
               }
 
@@ -82,10 +85,15 @@ function Home() {
 
 
               
-              <Row justify='center' gutter={16}>
+              <Row justify ="center" gutter={{
+        xs: 8,
+        sm: 16,
+        md: 24,
+        lg: 32,
+      }}>
 
                    {totalCars.map(car=>{
-                       return <Col lg={5} sm={24} xs={24}>
+                       return <Col   >
                             <div className="car p-2 bs1">
                                <img src={car.image} className="carimg"/>
 

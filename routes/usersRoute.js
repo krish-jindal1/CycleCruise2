@@ -26,9 +26,14 @@ router.post("/register", async(req, res) => {
     
 
     try {
+        if(req.body.password!=req.body.cpassword){
+            return res.status(400).json(error);
+        }
+        else{
         const newuser = new User(req.body)
         await newuser.save()
         res.send('User registered successfully')
+        }
     } catch (error) {
       return res.status(400).json(error);
     }

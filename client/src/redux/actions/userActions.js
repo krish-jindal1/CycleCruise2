@@ -16,7 +16,7 @@ export const userLogin=(reqObj)=>async dispatch=>{
         }, 500);
     } catch (error) {
         console.log(error)
-        message.error('Something went wrong')
+        message.error('Invalid Login Credentials')
         dispatch({type: 'LOADING' , payload:false})
     }
 }
@@ -37,7 +37,7 @@ export const userRegister=(reqObj)=>async dispatch=>{
         
     } catch (error) {
         console.log(error)
-        message.error('Something went wrong')
+        message.error('Confirm Password Does Not match')
         dispatch({type: 'LOADING' , payload:false})
     }
 }

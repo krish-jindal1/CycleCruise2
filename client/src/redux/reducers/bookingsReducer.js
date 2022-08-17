@@ -1,6 +1,6 @@
+
 const initialData = {
     bookings : [],
-
 };
 
 export const bookingsReducer = (state=initialData , action)=>{
@@ -16,5 +16,4 @@ export const bookingsReducer = (state=initialData , action)=>{
          
          default:return state
      }
-
 }
