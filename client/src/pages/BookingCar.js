@@ -9,7 +9,7 @@ import { bookCar } from "../redux/actions/bookingActions";
 import StripeCheckout from "react-stripe-checkout";
 import AOS from 'aos';
 
-import 'aos/dist/aos.css'; // You can also use <link> for styles
+import 'aos/dist/aos.css'; 
 const { RangePicker } = DatePicker;
 function BookingCar({ match }) {
   const { cars } = useSelector((state) => state.carsReducer);
@@ -45,6 +45,31 @@ function BookingCar({ match }) {
     setTotalHours(values[1].diff(values[0], "hours"));
   }
 
+  function isValid(){
+    var selectedFrom = moment(from , 'MMM DD yyyy HH:mm')
+        var selectedTo = moment(to , 'MMM DD yyyy HH:mm')
+
+              if(car.bookedTimeSlots.length == 0){
+                  return true;
+              }
+              else{
+
+                   for(var booking of car.bookedTimeSlots) {
+
+                       if(selectedFrom.isBetween(booking.from , booking.to) ||
+                       selectedTo.isBetween(booking.from , booking.to) || 
+                       moment(booking.from).isBetween(selectedFrom , selectedTo) ||
+                       moment(booking.to).isBetween(selectedFrom , selectedTo)
+                       )
+                       {
+                        return false;
+                       }  
+
+                   }
+        }
+        return true;
+  }
+  
   
 
   function onToken(token){
@@ -104,8 +129,20 @@ function BookingCar({ match }) {
           >
             See Booked Slots
           </button>
-          {from && to && (
+          {from && to && isValid()==false && (
             <div>
+            {console.log("hello")}
+              <p>
+                <b>This Slot Already booked</b>
+              </p>
+              </div>
+          )}
+
+
+          {from && to && isValid() &&(
+           
+            <div>
+            {console.log("hi")}
               <p>
                 Total Hours : <b>{totalHours}</b>
               </p>

@@ -22,14 +22,14 @@ function DefaultLayout(props) {
           Bookings
         </a>
       </Menu.Item>
+      {user.username=="KrishJ"&&(
       <Menu.Item>
-        <a
-         
-          href="/admin"
-        >
+        <a href="/admin">
           Admin
         </a>
+        
       </Menu.Item>
+      )}
       <Menu.Item onClick={()=>{
           localStorage.removeItem('user');
           window.location.href='/login'
