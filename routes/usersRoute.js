@@ -23,8 +23,6 @@ router.post("/login", async(req, res) => {
 
 router.post("/register", async(req, res) => {
 
-    
-
     try {
         if(req.body.password!=req.body.cpassword){
             return res.status(400).json(error);

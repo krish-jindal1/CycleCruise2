@@ -39,6 +39,9 @@ function BookingCar({ match }) {
   }, [driver, totalHours]);
 
   function selectTimeSlots(values) {
+    if(values==null){
+      return;
+      }
     setFrom(moment(values[0]).format("MMM DD yyyy HH:mm"));
     setTo(moment(values[1]).format("MMM DD yyyy HH:mm"));
 

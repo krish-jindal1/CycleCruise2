@@ -5,7 +5,6 @@ export const bookCar = (reqObj) => async (dispatch) => {
 
   try {
      await axios.post("/api/bookings/bookcar" , reqObj);
-
     dispatch({ type: "LOADING", payload: false });
     message.success("Your car booked successfully");
     setTimeout(() => {
