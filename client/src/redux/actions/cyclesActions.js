@@ -1,13 +1,13 @@
 import { message } from 'antd';
 import axios from 'axios';
 
-export const getAllCars=()=>async dispatch=>{
+export const getAllCycles=()=>async dispatch=>{
 
     dispatch({type: 'LOADING' , payload:true})
 
     try {
-        const response = await axios.get('/api/cars/getallcars')
-        dispatch({type: 'GET_ALL_CARS', payload:response.data})
+        const response = await axios.get('/api/cycles/getallcycles')
+        dispatch({type: 'GET_ALL_CYCLES', payload:response.data})
         dispatch({type: 'LOADING' , payload:false})
     } catch (error) {
         console.log(error)
@@ -16,15 +16,16 @@ export const getAllCars=()=>async dispatch=>{
 
 }
 
-export const addCar=(reqObj)=>async dispatch=>{
+export const addCycle=(reqObj)=>async dispatch=>{
 
     dispatch({type: 'LOADING' , payload:true})
 
     try {
-         await axios.post('/api/cars/addcar' , reqObj)
+        console.log("cycle adding")
+         await axios.post('/api/cycles/addcycle' , reqObj)
        
          dispatch({type: 'LOADING' , payload:false})
-         message.success('New car added successfully')
+         message.success('New cycle added successfully')
          setTimeout(() => {
             window.location.href='/admin'
          }, 500);
@@ -36,15 +37,15 @@ export const addCar=(reqObj)=>async dispatch=>{
 
 }
 
-export const editCar=(reqObj)=>async dispatch=>{
+export const editCycle=(reqObj)=>async dispatch=>{
 
     dispatch({type: 'LOADING' , payload:true})
 
     try {
-         await axios.post('/api/cars/editcar' , reqObj)
+         await axios.post('/api/cycles/editcycle' , reqObj)
        
          dispatch({type: 'LOADING' , payload:false})
-         message.success('Car details updated successfully')
+         message.success('Cycle details updated successfully')
          setTimeout(() => {
             window.location.href='/admin'
          }, 500);
@@ -56,15 +57,15 @@ export const editCar=(reqObj)=>async dispatch=>{
 
 }
 
-export const deleteCar=(reqObj)=>async dispatch=>{
+export const deleteCycle=(reqObj)=>async dispatch=>{
 
     dispatch({type: 'LOADING' , payload:true})
 
     try {
-         await axios.post('/api/cars/deletecar' , reqObj)
+         await axios.post('/api/cycles/deletecycle' , reqObj)
        
          dispatch({type: 'LOADING' , payload:false})
-         message.success('Car deleted successfully')
+         message.success('Cycle deleted successfully')
          setTimeout(() => {
             window.location.reload()
          }, 500);

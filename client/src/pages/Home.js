@@ -1,48 +1,48 @@
 import React , {useState,useEffect} from 'react'
 import { useSelector , useDispatch } from 'react-redux'
 import DefaultLayout from '../components/DefaultLayout'
-import { getAllCars } from '../redux/actions/carsActions'
+import { getAllCycles } from '../redux/actions/cyclesActions'
 import { Col, Row , Divider , DatePicker, Checkbox} from 'antd'
 import {Link} from 'react-router-dom'
 import Spinner from '../components/Spinner';
 import moment from 'moment'
 const {RangePicker} = DatePicker
 function Home() {
-    const {cars} = useSelector(state=>state.carsReducer)
+    const {cycles} = useSelector(state=>state.cyclesReducer)
     const {loading} = useSelector(state=>state.alertsReducer)
-    const [totalCars , setTotalcars] = useState([])
+    const [totalCycles , setTotalcycles] = useState([])
     const dispatch = useDispatch()
     
 
     useEffect(() => {
-        dispatch(getAllCars())
+        dispatch(getAllCycles())
     }, [])
 
     useEffect(() => {
 
-        setTotalcars(cars)
+        setTotalcycles(cycles)
         
-    }, [cars])
+    }, [cycles])
 
 
     function setFilter(values){
         if(values==null){
         return;
         }
-        var selectedFrom = moment(values[0] , 'MMM DD yyyy HH:mm')
-        var selectedTo = moment(values[1] , 'MMM DD yyyy HH:mm')
+        var selectedFrom = moment(values[0] , 'MMM DD yyyy')
+        var selectedTo = moment(values[1] , 'MMM DD yyyy')
 
         var temp=[]
 
-        for(var car of cars){
+        for(var cycle of cycles){
             var x=1;
-              if(car.bookedTimeSlots.length == 0){
-                  temp.push(car)
+              if(cycle.bookedTimeSlots.length == 0){
+                  temp.push(cycle)
               }
              
               else{
 
-                   for(var booking of car.bookedTimeSlots) {
+                   for(var booking of cycle.bookedTimeSlots) {
 
                        if(selectedFrom.isBetween(booking.from , booking.to) ||
                        selectedTo.isBetween(booking.from , booking.to) || 
@@ -56,14 +56,14 @@ function Home() {
 
                    }
                    if(x)
-                   temp.push(car)
+                   temp.push(cycle)
 
               }
 
         }
 
 
-        setTotalcars(temp)
+        setTotalcycles(temp)
 
 
     }
@@ -75,7 +75,7 @@ function Home() {
                  
                  <Col lg={20} sm={24} className='d-flex justify-content-left'>
 
-                     <RangePicker showTime={{format: 'HH:mm'}} format='MMM DD yyyy HH:mm' onChange={setFilter}/>
+                     <RangePicker format='MMM DD yyyy' onChange={setFilter}/>
                  
                  </Col>
 
@@ -92,20 +92,20 @@ function Home() {
         lg: 32,
       }}>
 
-                   {totalCars.map(car=>{
+                   {totalCycles.map(cycle=>{
                        return <Col   >
-                            <div className="car p-2 bs1">
-                               <img src={car.image} className="carimg"/>
+                            <div className="cycle p-2 bs1">
+                               <img src={cycle.image} className="cycleimg"/>
 
-                               <div className="car-content d-flex align-items-center justify-content-between">
+                               <div className="cycle-content d-flex align-items-center justify-content-between">
 
                                     <div className='text-left pl-2'>
-                                        <p>{car.name}</p>
-                                        <p> Rent Per Hour {car.rentPerHour} /-</p>
+                                        <p>{cycle.name}</p>
+                                        <p> Rent Per Day {cycle.rentPerDay} /-</p>
                                     </div>
 
                                     <div>
-                                        <button className="btn1 mr-2"><Link to={`/booking/${car._id}`}>Book Now</Link></button>
+                                        <button className="btn1 mr-2"><Link to={`/booking/${cycle._id}`}>Book Now</Link></button>
                                     </div>
 
                                </div>

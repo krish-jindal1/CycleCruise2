@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Booking = require("../models/bookingModel");
-const Car = require("../models/carModel");
+const Cycle = require("../models/cycleModel");
 const { v4: uuidv4 } = require("uuid");
 const stripe = require("stripe")(
   "sk_test_51IYnC0SIR2AbPxU0EiMx1fTwzbZXLbkaOcbc2cXx49528d9TGkQVjUINJfUDAnQMVaBFfBDP5xtcHCkZG1n1V3E800U7qXFmGf"
 );
-router.post("/bookcar", async (req, res) => {
+router.post("/bookcycle", async (req, res) => {
   const { token } = req.body;
   try {
     const customer = await stripe.customers.create({
@@ -31,11 +31,11 @@ router.post("/bookcar", async (req, res) => {
       req.body.transactionId = payment.source.id;
       const newbooking = new Booking(req.body);
       await newbooking.save();
-      const car = await Car.findOne({ _id: req.body.car });
-      console.log(req.body.car);
-      car.bookedTimeSlots.push(req.body.bookedTimeSlots);
+      const cycle = await Cycle.findOne({ _id: req.body.cycle });
+      console.log(req.body.cycle);
+      cycle.bookedTimeSlots.push(req.body.bookedTimeSlots);
 
-      await car.save();
+      await cycle.save();
       res.send("Your booking is successfull");
     } else {
       return res.status(400).json(error);
@@ -51,7 +51,7 @@ router.get("/getallbookings", async(req, res) => {
 
     try {
 
-        const bookings = await Booking.find().populate('car')
+        const bookings = await Booking.find().populate('cycle')
         res.send(bookings)
         
     } catch (error) {

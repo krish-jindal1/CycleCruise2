@@ -3,61 +3,57 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import DefaultLayout from "../components/DefaultLayout";
 import Spinner from "../components/Spinner";
-import { getAllCars } from "../redux/actions/carsActions";
+import { getAllCycles } from "../redux/actions/cyclesActions";
 import moment from "moment";
-import { bookCar } from "../redux/actions/bookingActions";
+import { bookCycle } from "../redux/actions/bookingActions";
 import StripeCheckout from "react-stripe-checkout";
 import AOS from 'aos';
 
 import 'aos/dist/aos.css'; 
 const { RangePicker } = DatePicker;
-function BookingCar({ match }) {
-  const { cars } = useSelector((state) => state.carsReducer);
+function BookingCycle({ match }) {
+  const { cycles } = useSelector((state) => state.cyclesReducer);
   const { loading } = useSelector((state) => state.alertsReducer);
-  const [car, setcar] = useState({});
+  const [cycle, setcycle] = useState({});
   const dispatch = useDispatch();
   const [from, setFrom] = useState();
   const [to, setTo] = useState();
-  const [totalHours, setTotalHours] = useState(0);
-  const [driver, setdriver] = useState(false);
+  const [totalDays, setTotalDays] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    if (cars.length == 0) {
-      dispatch(getAllCars());
+    if (cycles.length == 0) {
+      dispatch(getAllCycles());
     } else {
-      setcar(cars.find((o) => o._id == match.params.carid));
+      setcycle(cycles.find((o) => o._id == match.params.cycleid));
     }
-  }, [cars]);
+  }, [cycles]);
 
   useEffect(() => {
-    setTotalAmount(totalHours * car.rentPerHour);
-    if (driver) {
-      setTotalAmount(totalAmount + 30 * totalHours);
-    }
-  }, [driver, totalHours]);
+    setTotalAmount(totalDays * cycle.rentPerDay+20);
+  }, [ totalDays]);
 
   function selectTimeSlots(values) {
     if(values==null){
       return;
       }
-    setFrom(moment(values[0]).format("MMM DD yyyy HH:mm"));
-    setTo(moment(values[1]).format("MMM DD yyyy HH:mm"));
+    setFrom(moment(values[0]).format("MMM DD yyyy"));
+    setTo(moment(values[1]).format("MMM DD yyyy"));
 
-    setTotalHours(values[1].diff(values[0], "hours"));
+    setTotalDays(values[1].diff(values[0], "days"));
   }
 
   function isValid(){
-    var selectedFrom = moment(from , 'MMM DD yyyy HH:mm')
-        var selectedTo = moment(to , 'MMM DD yyyy HH:mm')
+    var selectedFrom = moment(from , 'MMM DD yyyy')
+        var selectedTo = moment(to , 'MMM DD yyyy')
 
-              if(car.bookedTimeSlots.length == 0){
+              if(cycle.bookedTimeSlots.length == 0){
                   return true;
               }
               else{
 
-                   for(var booking of car.bookedTimeSlots) {
+                   for(var booking of cycle.bookedTimeSlots) {
 
                        if(selectedFrom.isBetween(booking.from , booking.to) ||
                        selectedTo.isBetween(booking.from , booking.to) || 
@@ -79,17 +75,16 @@ function BookingCar({ match }) {
     const reqObj = {
         token,
         user: JSON.parse(localStorage.getItem("user"))._id,
-        car: car._id,
-        totalHours,
+        cycle: cycle._id,
+        totalDays,
         totalAmount,
-        driverRequired: driver,
         bookedTimeSlots: {
           from,
           to,
         },
       };
   
-      dispatch(bookCar(reqObj));
+      dispatch(bookCycle(reqObj));
   }
 
   return (
@@ -101,26 +96,28 @@ function BookingCar({ match }) {
         style={{ minHeight: "90vh" }}
       >
         <Col lg={10} sm={24} xs={24} className='p-3'>
-          <img src={car.image} className="carimg2 bs1 w-100" data-aos='flip-left' data-aos-duration='1500'/>
+       { console.log(cycle.image)}
+          <img src={cycle.image} className="cycleimg2 bs1 w-100" />
         </Col>
 
         <Col lg={10} sm={24} xs={24} className="text-right">
+        <h2>{cycle.name}</h2>
           <Divider type="horizontal" dashed>
-            Car Info
+            Cycle Info
           </Divider>
           <div style={{ textAlign: "right" }}>
-            <p>{car.name}</p>
-            <p>{car.rentPerHour} Rent Per hour /-</p>
-            <p>Fuel Type : {car.fuelType}</p>
-            <p>Max Persons : {car.capacity}</p>
+            
+            <p>{cycle.rentPerDay} Rent Per Day /-</p>
+            <p>Brake : {cycle.brake}</p>
+            <p>No. of gears : {cycle.gear}</p>
+            <p>Condition : {cycle.condition}</p>
           </div>
 
           <Divider type="horizontal" dashed>
             Select Time Slots
           </Divider>
           <RangePicker
-            showTime={{ format: "HH:mm" }}
-            format="MMM DD yyyy HH:mm"
+            format="MMM DD yyyy"
             onChange={selectTimeSlots}
           />
           <br />
@@ -145,24 +142,14 @@ function BookingCar({ match }) {
           {from && to && isValid() &&(
            
             <div>
-            {console.log("hi")}
+            
               <p>
-                Total Hours : <b>{totalHours}</b>
+                Total Days : <b>{totalDays}</b>
               </p>
               <p>
-                Rent Per Hour : <b>{car.rentPerHour}</b>
+                Rent Per Day : <b>{cycle.rentPerDay}</b>
               </p>
-              <Checkbox
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setdriver(true);
-                  } else {
-                    setdriver(false);
-                  }
-                }}
-              >
-                Driver Required
-              </Checkbox>
+              
 
               <h3>Total Amount : {totalAmount}</h3>
 
@@ -183,7 +170,7 @@ function BookingCar({ match }) {
           )}
         </Col>
 
-        {car.name && (
+        {cycle.name && (
           <Modal
             visible={showModal}
             closable={false}
@@ -191,7 +178,7 @@ function BookingCar({ match }) {
             title="Booked time slots"
           >
             <div className="p-2">
-              {car.bookedTimeSlots.map((slot) => {
+              {cycle.bookedTimeSlots.map((slot) => {
                 return (
                   <button className="btn1 mt-2">
                     {slot.from} - {slot.to}
@@ -217,4 +204,4 @@ function BookingCar({ match }) {
   );
 }
 
-export default BookingCar;
+export default BookingCycle;

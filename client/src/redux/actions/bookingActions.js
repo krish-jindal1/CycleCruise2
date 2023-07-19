@@ -1,12 +1,12 @@
 import axios from "axios";
 import { message } from "antd";
-export const bookCar = (reqObj) => async (dispatch) => {
+export const bookCycle = (reqObj) => async (dispatch) => {
   dispatch({ type: "LOADING", payload: true });
 
   try {
-     await axios.post("/api/bookings/bookcar" , reqObj);
+     await axios.post("/api/bookings/bookcycle" , reqObj);
     dispatch({ type: "LOADING", payload: false });
-    message.success("Your car booked successfully");
+    message.success("Your cycle booked successfully");
     setTimeout(() => {
       window.location.href='/userbookings'
     }, 500);

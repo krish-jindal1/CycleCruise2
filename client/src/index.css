@@ -72,28 +72,28 @@ button{
 
 
 /* this is just for ui purpose , no functionality is related */
-.car{
+.cycle{
   border-radius: 5px;
   margin-top: 100px;
   height: 160px;
   transition: 0.3s;
 }
-.car:hover{
+.cycle:hover{
   height :220px;
 }
-.car:hover > .car-content{
+.cycle:hover > .cycle-content{
 
     opacity: 1;
     transform : translateY(-40px)
 
 }
-.carimg{
+.cycleimg{
   height:180px;
   width: auto;
   border-radius: 5px;
   transform: translateY(-50px);
 }
-.car-content{
+.cycle-content{
   transform: translateY(-200px);
   opacity: 0;
   transition: 0.3s;
@@ -133,7 +133,7 @@ button{
   opacity: 0.5;
 }
 
-.carimg2{
+.cycleimg2{
   height: 400px;
   border-radius: 10px;
   width: auto;

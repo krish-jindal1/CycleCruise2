@@ -21,22 +21,24 @@ router.post("/login", async(req, res) => {
   
 });
 
-router.post("/register", async(req, res) => {
 
+router.post("/register", async (req, res) => {
     try {
-        if(req.body.password!=req.body.cpassword){
-            return res.status(400).json(error);
-        }
-        else{
-        const newuser = new User(req.body)
-        await newuser.save()
-        res.send('User registered successfully')
-        }
-    } catch (error) {
-      return res.status(400).json(error);
-    }
+        const { username} = req.body;
 
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ error: "User with this username already exists." });
+        }
+
+        const newUser = new User(req.body);
+        await newUser.save();
+        res.send('User registered successfully');
+    } catch (error) {
+        return res.status(400).json({ error: "Registration Failed,Please try again later." });
+    }
 });
+
 
 
 module.exports = router

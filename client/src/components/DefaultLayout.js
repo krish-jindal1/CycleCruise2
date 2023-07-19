@@ -1,6 +1,16 @@
 import React from "react";
 import { Menu, Dropdown, Button, Space , Row , Col } from "antd";
 import {Link} from 'react-router-dom'
+import logo from "../assets/Logo2.jpg"
+import styled from "styled-components";
+
+const LogoImage = styled.img`
+  width: 7%;
+
+  @media (max-width: 600px) {
+    width: 15%;
+  }
+`;
 
 function DefaultLayout(props) {
     const user = JSON.parse(localStorage.getItem('user'))
@@ -42,10 +52,10 @@ function DefaultLayout(props) {
     <div>
       <div className="header bs1">
           <Row gutter={16} justify='center'>
-              <Col lg={20} sm={24} xs={24}>
-              <div className="d-flex justify-content-between">
-             <h1 ><b><Link to='/' style={{color:'orangered'}}>Easy Ride</Link></b></h1>
-
+              <Col lg={20} sm={24} xs={24} >
+              <div className="d-flex justify-content-between" style={{alignItems:'center'}}>
+              <LogoImage src={logo} alt="Logo" />
+              <h1> Unleash Your Cycling Adventure!</h1>
           <Dropdown overlay={menu} placement="bottomCenter">
             <Button>{user.username}</Button>
           </Dropdown>

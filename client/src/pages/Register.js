@@ -1,72 +1,152 @@
-import React from "react";
-import { Row, Col, Form, Input } from "antd";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import {useDispatch , useSelector} from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 import { userRegister } from "../redux/actions/userActions";
-import AOS from 'aos';
-import Spinner from '../components/Spinner';
-import 'aos/dist/aos.css';
-import Password from "antd/lib/input/Password";
-// ..
-AOS.init()
-function Register() {
-  const dispatch = useDispatch()
-  const {loading} = useSelector(state=>state.alertsReducer)
-    function onFinish(values) {
-      console.log(values)
-           dispatch(userRegister(values))
-          //  console.log(values)
-    }
+import { Grid, Typography, Button, TextField } from "@mui/material";
+import Spinner from "../components/Spinner";
+import {message} from 'antd'
+import logo from "../assets/Logo2.jpg"
+
+function Login() {
+  const [values, setValues] = useState({
+    username: "",
+    password: "",
+    cpassword: "",
+  });
+
+  const handleChange = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
+
+ 
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.alertsReducer);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = {
+        username: values.username,
+        password: values.password,
+        cpassword:values.cpassword
+      };
+      if(!formData.username||!formData.password||!formData.cpassword){
+        message.error('All fields are required')
+      }
+      else if(formData.password!=formData.cpassword){
+        message.error('Password and confirm password do not match.')
+      }
+      else if(formData.password.length<8){
+        message.error('Password length should be at least 8')
+      }
+    
+      else {
+        
+        console.log(formData);
+        dispatch(userRegister(formData))
+        // Dispatch user login action or perform further actions here
+      }
+  };
 
   return (
-    <div className="login">
-      {loading && (<Spinner />)}
-      <Row gutter={16} className="d-flex align-items-center">
-        <Col lg={16} style={{ position: "relative" }}>
-          <img 
-           className='w-100'
-           data-aos='slide-left'
-           data-aos-duration='1500'
-          src="https://images.unsplash.com/photo-1485291571150-772bcfc10da5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=928&q=80" />
-          
-        </Col>
-        <Col lg={8} className="text-left p-5">
-          <Form layout="vertical" className="login-form p-5" onFinish={onFinish}>
-            <h1>Register</h1>
-            <hr />
-            <Form.Item
-              name="username"
-              label="Username"
-              rules={[{ required: true }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              label="Password"
-              rules={[{ required: true }]}
-            >
-              <Input type={"password"} />
-            </Form.Item>
-            <Form.Item
-              name="cpassword"
-              label="Confirm Password"
-              rules={[{ required: true }]}
-            >
-              <Input type={"password"}/>
-            </Form.Item>
+    <div style={{  backgroundColor: "#806a6a" }}>
+      {loading && <Spinner />}
 
-            <button className="btn1 mt-2 mb-3">Register</button>
-            <br />
-
-            <Link to="/login">Click Here to Login</Link>
-          </Form>
-        </Col>
-      </Row>
+      <Grid
+        container
+        style={{ minHeight: "100vh", padding: "50px", backgroundColor: "#806a6a" }}
+      >
+        <Grid
+          container
+          style={{
+            borderRadius: "10px",
+            overflow: "hidden",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Grid xs={12} sm={12} md={6} lg={6}>
+            <img
+              src="https://images.unsplash.com/photo-1511994298241-608e28f14fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              alt="Background"
+            />
+          </Grid>
+          <Grid xs={12} sm={12} md={6} lg={6} style={{ backgroundColor: "white" }}>
+          <Grid container item justifyContent="flex-end"
+          alignItems="center" sx={{ marginBottom:'15px' }}>
+    <img src={logo} style={{width:'12%',marginTop:'3%',marginRight:'5%' }}></img>
+  </Grid>
+            <Grid
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                maxHeight: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h4">User Registration</Typography>
+              <Typography variant="body1">
+                Hey, enter your details to register your account !!
+              </Typography>
+              <br />
+              <form onSubmit={handleSubmit}>
+              <TextField
+                type="text"
+                required
+                id="standard-required"
+                label="Username"
+                variant="standard"
+                value={values.username}
+                onChange={handleChange("username")}
+                sx={{ m: 1, width: "25ch" }}
+              />
+              <br />
+              
+              <TextField
+                type="password"
+                id="standard-password-input"
+                autoComplete="current-password"
+                label="Password"
+                variant="standard"
+                value={values.password}
+                required
+                onChange={handleChange("password")}
+                sx={{ m: 1, width: "25ch" }}
+              />
+                
+                <br />
+                <TextField
+                type="password"
+                id="standard-password-input"
+                autoComplete="current-password"
+                label="Confirm Password"
+                variant="standard"
+                value={values.cpassword}
+                required
+                onChange={handleChange("cpassword")}
+                sx={{ m: 1, width: "25ch" }}
+              />
+                
+                <br />
+              <Button
+               type ="submit"
+                variant="contained"
+                sx={{ m: 1, width: "30ch" }}
+                
+              >
+                Register
+              </Button>
+              
+              </form>
+              <br />
+              <Typography>Already have a account? <Link to="/login">Login Here</Link></Typography>
+            
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </div>
   );
 }
 
-export default Register;
-
-
+export default Login;

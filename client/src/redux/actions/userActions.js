@@ -21,23 +21,22 @@ export const userLogin=(reqObj)=>async dispatch=>{
     }
 }
 
-export const userRegister=(reqObj)=>async dispatch=>{
-    
-    dispatch({type: 'LOADING' , payload:true})
+
+export const userRegister = (reqObj) => async (dispatch) => {
+    dispatch({ type: 'LOADING', payload: true });
 
     try {
-        const response = await axios.post('/api/users/register' , reqObj)
-        message.success('Registration successfull')
+        const response = await axios.post('/api/users/register', reqObj);
+        message.success(response.data);
         setTimeout(() => {
-            window.location.href='/login'
-         
+            window.location.href = '/login';
         }, 500);
-       
-        dispatch({type: 'LOADING' , payload:false})
-        
+
+        dispatch({ type: 'LOADING', payload: false });
+
     } catch (error) {
-        console.log(error)
-        message.error('Confirm Password Does Not match')
-        dispatch({type: 'LOADING' , payload:false})
+        console.log(error.response.data.error);
+        message.error(error.response.data.error);
+        dispatch({ type: 'LOADING', payload: false });
     }
-}
+};
